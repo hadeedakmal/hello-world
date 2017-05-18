@@ -1,0 +1,57 @@
+---
+title: "Project: Data Wrangling Exercise 1: Basic Data Manipulation"
+author: "Hadeed Akmal"
+date: "16 May 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(error = TRUE)
+```
+
+
+```{r}
+library(dplyr)
+options(dplyr.width = Inf)
+readRDS('refine_original.rds')
+refine_original <- readRDS('refine_original.rds')
+```
+
+```{r}
+library(dplyr)
+clean_company <- gsub("Phillips|phillips|phllips|phillps|phillipS|phlips|fillips", "philips", refine_original$company)
+clean_company <- gsub("Akzo|AKZO|akz0|ak zo", "akzo", clean_company)
+clean_company <- gsub("Van Houten|van Houten", "van houten", clean_company)
+clean_company <- gsub ("unilver|Unilever", "unilever", clean_company)
+print(clean_company)
+```
+
+
+```{r}
+updated_refine_original <- cbind(refine_original, clean_company)
+print(updated_refine_original)
+```
+
+```{r}
+library(tidyr)
+updated_refine_original <- separate(updated_refine_original, "Product code / number", c("product_code", "product_number"), sep = "-")
+updated_refine_original
+```
+
+
+```{r}
+product_category <- c('smartphone', 'smartphone', 'Laptop', 'Laptop', 'Laptop', 'smartphone', 'TV', 'TV', 'Laptop', 'smartphone', 'tablet', 'tablet', 'Laptop', 'smartphone', 'TV', 'TV', 'Laptop', 'TV', 'TV', 'Laptop', 'smartphone', 'Laptop', 'tablet', 'tablet', 'tablet')
+updated_refine_original <- cbind(updated_refine_original, product_category)
+updated_refine_original
+```
+
+
+```{r}
+updated_refine_original <- unite(updated_refine_original, 'full_address', address,city,country, sep= ',')
+updated_refine_original
+
+```
+
+
+
+
